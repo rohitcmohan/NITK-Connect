@@ -18,20 +18,25 @@
       <ion-item menu-close class="item item-divider" href="#/app/articles">
 		    Home
 	    </ion-item>
-      <ion-item menu-close class="item item-divider" href="#/app/live">
+      <ion-item menu-close class="item item-divider" href="#/app/live" >
         Live News
       </ion-item>
 		<div menu-close ng-repeat="category in categories">
           <a ng-if="category.taxons.length > 0 && category.is_first_level" ng-click="showSubcategories(category)" class="item">{{category.title}}</a>
-          <a ng-if="category.taxons.length == 0 || !category.is_first_level"  href="#/app/category/{{category.title}}" class="item">{{category.title}}</a>
-		</div>
+          <a ng-if="(category.taxons.length == 0 || !category.is_first_level)&&category.id!=1"  href="#/app/category/{{category.title}}" class="item" >{{category.title}}</a>
+    </div>
 		</div>
 		<div>
 		<ion-item menu-close class="item item-divider" style="vertical-align: bottom" offset = "5" href="#/app/coupons">
-        Restaurant Deals
+        College Directory
 		</ion-item>
 		</div>
-      <div>
+    <div>
+    <ion-item menu-close class="item item-divider" style="vertical-align: bottom" offset = "5"href="#/app/settings">
+        Settings
+    </ion-item>
+    </div>
+    <div>
     <ion-item menu-close class="item item-divider" style="vertical-align: bottom" offset = "5" href="#/app/about">
         About Us
     </ion-item>

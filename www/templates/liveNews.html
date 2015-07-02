@@ -1,13 +1,16 @@
- <ion-nav-buttons side="left">
-  <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-  </ion-nav-buttons>
+<ion-view title="Live News" hide-back-button=false >
+  <ion-nav-buttons side="left" href="#/app/live">
+  <!-- <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+   --></ion-nav-buttons>
 
-  <ion-content class="has-header">
-    <ion-list>
-      <ion-item   ng-repeat="coupon in  coupon_list"  href="#/app/coupons/{{restaurant_id}}/{{coupon.id}}">
-            {{article.content}}<br/>
-            {{millisToUTCDate(article.created_at) | date: 'd MMMM yyyy hh:mm a' : 'UTC'}}
-        </ion-item>
-      </ion-list>
-  </ion-content>
+    <ion-content class="has-header">
+        <ion-list>
+          <div  ng-repeat="article in liveArticles " >
+
+              <div ng-bind-html="article.content" class="item item-text-wrap" style="text-align: justify;">
+              </div><div style="text-align: right;">{{article.created_at | date: 'hh:mm a'}}</div>
+              <div align="center" ng-if="article.image_url!='/images/medium/missing.png'"><img src="http://106.186.23.15/{{article.image_url}}'"/></div>
+          </div>
+        </ion-list>
+      </ion-content>
 </ion-view>

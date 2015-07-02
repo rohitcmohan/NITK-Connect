@@ -1,23 +1,24 @@
 <ion-view title="Live News" hide-back-button=true >
-  <ion-nav-buttons side="left">
+  <ion-nav-buttons side="left" href="#/app/articles">
   <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
 
     <ion-content class="has-header">
-      <ion-refresher
+<!--       <ion-refresher
             pulling-text="Pull to refresh..."
             refreshing-icon="ion-loading-d"
             refreshing-text="Refreshing"
-            on-refresh="doRefresh()"
-            >
+            on-refresh="doRefreshLive()"
+            > -->
         </ion-refresher>
         <ion-list>
-          <ion-item  ng-repeat="article in articles " ng-if="cut.isBefore(article.created_at)">
+          <ion-item  ng-repeat="article in unique "  href="#/app/live/{{article}}">
+
               <div class="item item-text-wrap" style="text-align: justify;">
-                {{article.content}}<br/>
-                {{article.created_at | date: 'hh:mm a'}}
+                {{article}}<br/>
+                <!-- {{article.created_at | date: 'hh:mm a'}} -->
               
-              <div align="center" ng-if="article.image_url!='/images/medium/missing.png'"><img src="http://106.186.23.15/{{article.image_url}}'"/></div>
+              <!-- <div align="center" ng-if="article.image_url!='/images/medium/missing.png'"><img src="http://106.186.23.15/{{article.image_url}}'"/></div> -->
           </ion-item>
         </ion-list>
       </ion-content>

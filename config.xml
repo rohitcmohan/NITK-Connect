@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.nitkconnect621232" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>NITK-Connect</name>
+<?xml version="2.0" encoding="UTF-8" standalone="yes"?>
+<widget id="com.ionicframework.nitkconnect621232" version="1.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>NITK Connect</name>
   <description>
         An Ionic Framework and Cordova project.
     </description>
@@ -16,4 +16,6 @@
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
+  <preference name="SplashScreen" value="screen2" />
+  <preference name="SplashScreenDelay" value="6500" />
 </widget>

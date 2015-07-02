@@ -1,10 +1,10 @@
 // Ionic Starter App
-
+//yes
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'ngStorage'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ngStorage', 'pushNotify'])
 
 .service('Constants', function($http) {
   this.baseUrl = 'http://106.186.23.15'; //Change for correct URL
@@ -17,16 +17,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngStorage'])
     articleList = artList;
   }
 
-  // var store = lawnchair(function(store){
-  //   var str={key: articleList};
-
-  //   store.save(str);
-  
-  //   this.get(articleList,function(str){
-  //     console.log(str);
-  //   })
-  // })
-
   var getList = function(){
     return articleList;
   }
@@ -34,69 +24,80 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngStorage'])
   return{
     addList: addList,
     getList: getList,
-   // store: store
   };
 })
 
-// .factory('cache', ['$cacheFactory', function($cacheFactory) {
-//     return $cacheFactory('cache');
-// }])
+.run(function($ionicPlatform, Constants, $localStorage, $ionicPopup, pushNotification, $ionicLoading) {
 
-// postRequest =  function(url) {
-//   $http.post(baseUrl + 'url').then(function(resp) {
-//     console.log('Success', resp);
-//     // For JSON responses, resp.data contains the result
-//     result = resp.data
-//   }, function(err) {
-//     console.error('ERR', err);
-//     // err.status will contain the status code
-//   })
-//   return result;
-// }
+  //if (window.localStorage.getItem("reg") == null)
+  //$localStorage.$reset();
+  $ionicLoading.show({
+    template: 'Loading...',
+    content: 'Loading',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
 
-.run(function($ionicPlatform, Constants, $localStorage) {
+  if(typeof $localStorage.store == 'undefined'){
+    $.ajax({
+        type: "GET",
+        async: false,
+        url: Constants.baseUrl + '/api/list?after=0'
+      })
+     .success(function(response,status) {
+       res = response;
+     })
+     console.log('data',res);
+     $localStorage.$default({
+          store: res
+      });
+   }
+ 
+  pushNotification.registerPush();
+  
+  console.log($localStorage);
+  
   $ionicPlatform.ready(function() {
+    
+    if(typeof analytics !== 'undefined')
+      analytics.startTrackerWithId('UA-60272791-1');
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     //$cordovaSplashScreen.show();
     //navigator.splashscreen.show();
     res=[];
-    console.log("Cordova is ready, let's do this!");
+    
+    if (typeof $localStorage.store[0] != "undefined") {
+      last_date = new Date($localStorage.store[0].created_at).getTime()/1000.0;
+    } else { 
+      last_date = 0;
+    }
+    console.log("app.js");
+    console.log(Constants.baseUrl + '/api/list?after=' + Math.round(new Date(last_date)));
+    // console.log(Constants.baseUrl + "/api/list?after=\"" + last_date + "\"");
     $.ajax({
         type: "GET",
         async: false,
-        url: Constants.baseUrl + '/api/list?after=0'})
+        url: Constants.baseUrl + '/api/list?after=' + String(last_date)
+      })
      .success(function(response,status) {
        res = response;
-       delete $localStorage.store;
-      //navigator.splashscreen.hide();
-       //$cordovaSplashScreen.hide();
-
-       console.log('refresh');
+       if (last_date==0)
+          $localStorage.store = [];
+       // Store newer articles at the start of the array
+       $.each(res.reverse(), function( i, n ){
+          $localStorage.store.unshift(n);
+       });
      })
-     console.log('refresh');
-
-     data=res;
-     console.log('data',data);
+     console.log('data',res);
      $localStorage.$default({
-          store: data
-          });
+          store: res
+      });
 
-  // for(var i=0;i<$localStorage.store.length;i++){
-  // if($localStorage.store[i].event==true){
-  //     console.log('event');
-  //     str='';
-  //     for(var j=0;j<19;j++){
-  //       if(j==10){
-  //         str+=' Time: ';
-  //       }else{
-  //         str+=($localStorage.store[i].event_start).charAt(j);
-  //       }
-  //     }
-  //     console.log(str);
-  //     $localStorage.store[i].event_start=str;
-  //   }
-  // }
+    $ionicLoading.hide();
+ 
     if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
@@ -105,9 +106,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngStorage'])
       StatusBar.styleDefault();
     }
   });
+  //   $ionicPlatform.onHardwareBackButton(function () {
+  //     if(true) { // your check here
+  //         $ionicPopup.confirm({
+  //           title: 'System warning',
+  //           template: 'are you sure you want to exit?'
+  //         }).then(function(res){
+  //           if( res ){
+  //             navigator.app.exitApp();
+  //           }
+  //         })
+  //     }
+  // })
+
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+
   $stateProvider
 
     .state('app', {
@@ -137,11 +152,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngStorage'])
       }
     })
 
-      .state('app.liveNews', {
+    .state('app.liveNews', {
       url: "/live",
       views: {
         'menuContent' :{
           templateUrl: "templates/live.html",
+          controller: 'LiveCtrl'
+        }
+      }
+    })
+
+    .state('app.liveNewsArticles', {
+      url: "/live/:title",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/liveNews.html",
           controller: 'LiveCtrl'
         }
       }
@@ -203,6 +228,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngStorage'])
         'menuContent' :{
           templateUrl: "templates/article.html",
           controller: 'ArticleCtrl'
+        }
+      }
+    })
+    
+    .state('app.settings',{
+      url:"/settings",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/settings.html",
+          controller:'settingsCtrl'
         }
       }
     });

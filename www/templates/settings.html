@@ -1,0 +1,12 @@
+<ion-view title="Settings" hide-back-button=false style="background-colour:blue">
+  <ion-nav-buttons side="right">
+  <button class="button" ng-click="send()"><h4><b>Save</b></h4></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header" style="background-colour:blue">
+  <div style="text-align:center;"><h4>Select categories for which you wish to receive push notifications and click Save!</h4><br/><div>
+  <ion-item ng-repeat="category in categories" style="text-align:left;">
+  <ion-toggle ng-model="category.favourite" toggle-class="toggle-calm">{{category.name}}</ion-toggle>
+          
+          </ion-item>
+          </ion-content>
+          </ion-view>

@@ -1,6 +1,5 @@
- <ion-view title="Restaurant Deals" hide-back-button=true>
+ <ion-view title="College Directory" hide-back-button=false>
  <ion-nav-buttons side="left">
-  <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
 
   <ion-content class="has-header">
@@ -8,17 +7,10 @@
   <br/>
     <b>{{res_title}}</b><br/><br/>
   </ion-item>
-  <ion-item>
-  <div class="item item-text-wrap" style="text-align: justify;"><b>{{description1}}</b>{{description2}}<br/></div>
-  <div class="item item-text-wrap" style="text-align: justify;"><b>{{description3}}</b>{{description4}}<br/></div>
-  <div class="item item-text-wrap" style="text-align: justify;"><b>{{description5}}</b>{{description6}}<br/></div>
-  <div class="item item-text-wrap" style="text-align: justify;"><b>{{description7}}</b>{{description8}}<br/></div>
-  </ion-item>
-        <ion-list>
-        <ion-item ng-repeat="coupon in coupon_list"  href="#/app/coupons/{{restaurant_id}}/{{coupon.id}}">
-                <b> Offer: {{coupon.title}} </b><br/>
-                {{coupon.content}}
-          </ion-item>
-        </ion-list>
+    <ion-list>
+      <ion-item ng-bind-html="content" class="item item-text-wrap" ng-repeat="coupon in coupon_list">
+      </ion-item></br></br>
+      <div align="center" ng-if="url!='http://106.186.23.15/images/medium/missing.png'"><a href="{{url}}" data-lightbox="{{res_title}}" data-title="{{res_title}}"><img src="{{url}}"/></a></div>
+    </ion-list>
   </ion-content>
 </ion-view>

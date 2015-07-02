@@ -16,12 +16,14 @@
             >
         </ion-refresher>
         <ion-list>
-          <ion-item  ng-repeat="article in articles" ng-if="article.event==false && article.category!='Coupons' && article.category!='Live News'"  href="#/app/article/{{article.id}}" >
+          <ion-item  ng-repeat="article in articles" ng-if="article.event==false && article.category!='Coupons' && article.category!='Live News'"  href="#/app/article/{{article.id}}" class="item item-text-wrap" >
               <div >
               <b>{{article.title}}</b>
               </div>
               <div class="item-text-wrap" style="text-align: justify;">
-                Posted by: {{article.author}}
+                Posted by: {{article.author}}<br/>
+                {{from(article.created_at)}}
+                <!-- Created at: {{millisToUTCDate(article.created_at) | date: 'd MMMM yyyy hh:mm a' : 'UTC'}} -->
               </div>
           </ion-item>
         </ion-list>
@@ -38,7 +40,8 @@
             >
         </ion-refresher>
         <ion-list>
-          <ion-item class="card" ng-repeat="event in articles | orderBy: 'event_start' " ng-if="event.event==true && cut.isBefore(event.event_start)" href="#/app/article/{{event.id}}">
+        <ion-item ng-show="number==0" style="text-align: center;">No Upcoming Events</ion-item>
+          <ion-item class="card" ng-repeat="event in articles | orderBy: 'event_start' " ng-if="event.event && cut.isBefore(event.event_start)" href="#/app/article/{{event.id}}" class="item item-text-wrap">
               <div>
                 <b>{{event.title}}</b>
               </div>

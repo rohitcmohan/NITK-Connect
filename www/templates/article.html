@@ -3,15 +3,14 @@
     <button class="button button-icon icon ion-chatbox" href="#/app/article/{{title}}/comments"></button>
   </ion-nav-buttons> -->
   <ion-content class="has-header">
-  
     <div class="card">
-            <div class="item item-divider">
-              {{title}}
-            </div>
-          <div class="item item-text-wrap" style="text-align: justify;">
-            {{content}}
-          </div>
-        </div>
-      <div align="center" ng-if="url!='http://106.186.23.15/images/medium/missing.png'"><img src="{{url}}"/></div>
+      <div class="item item-divider">
+        {{title}}
+      </div>
+      <div ng-bind-html="content" class="item item-text-wrap" style="text-align: justify;">
+      </div>
+    </div>
+    <div align="center" ng-if="url!='http://106.186.23.15/images/medium/missing.png'"><a href="{{url}}" data-lightbox="{{title}}" data-title="{{title}}"><img src="{{url}}"/></a></div>
+    <!-- <div align="center" ng-if="url!='http://106.186.23.15/images/medium/missing.png'"><img src="{{url}}"/></div> -->
   </ion-content>
 </ion-view>
